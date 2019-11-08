@@ -8,7 +8,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -57,7 +56,9 @@ public class CreateSnapActivity extends AppCompatActivity {
 
     public void nextClicked(View view) {
         // Get the data from an ImageView as bytes
-        Bitmap bitmap = ((BitmapDrawable) createSnapImageView.getDrawable()).getBitmap();
+        createSnapImageView.setDrawingCacheEnabled(true);
+        createSnapImageView.buildDrawingCache();
+        Bitmap bitmap = createSnapImageView.getDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
@@ -96,7 +97,7 @@ public class CreateSnapActivity extends AppCompatActivity {
 
         Uri selectedImage = data.getData();
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 createSnapImageView.setImageBitmap(bitmap);
