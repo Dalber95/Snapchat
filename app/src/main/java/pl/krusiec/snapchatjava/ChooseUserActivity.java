@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -61,11 +62,13 @@ public class ChooseUserActivity extends AppCompatActivity {
         chooseUserListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intentExtra = getIntent();
+
                 Map<String, String> snapMap = new HashMap<>();
-                snapMap.put("from", "");
-                snapMap.put("imageName", "");
-                snapMap.put("imageURL", "");
-                snapMap.put("message", "");
+                snapMap.put("from", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                snapMap.put("imageName", intentExtra.getStringExtra("imageName"));
+                snapMap.put("imageURL", intentExtra.getStringExtra("imageURL"));
+                snapMap.put("message", intentExtra.getStringExtra("message"));
 
                 FirebaseDatabase.getInstance().getReference().child("users").child(keys.get(position))
                         .child("snaps").push().setValue(snapMap);

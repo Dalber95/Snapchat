@@ -82,6 +82,9 @@ public class CreateSnapActivity extends AppCompatActivity {
                                 Log.i("URL", downloadUrl);
 
                                 Intent intent = new Intent(getApplicationContext(), ChooseUserActivity.class);
+                                intent .putExtra("imageURL", downloadUrl);
+                                intent .putExtra("imageName", imageName);
+                                intent .putExtra("message", messageEditText.getText().toString());
                                 startActivity(intent);
                             }
                         });
