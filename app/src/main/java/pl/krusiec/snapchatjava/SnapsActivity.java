@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -24,6 +26,7 @@ public class SnapsActivity extends AppCompatActivity {
     ListView snapsListView;
 
     ArrayList<String> emails = new ArrayList<>();
+    ArrayList<DataSnapshot> snaps = new ArrayList<>();
     ArrayAdapter<String> adapter;
     private FirebaseAuth mAuth;
 
@@ -44,6 +47,7 @@ public class SnapsActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 emails.add(String.valueOf(dataSnapshot.child("from").getValue()));
+                snaps.add(dataSnapshot);
                 adapter.notifyDataSetChanged();
             }
 
@@ -58,6 +62,20 @@ public class SnapsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+
+        snapsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DataSnapshot snapshot = snaps.get(position);
+
+                Intent intent = new Intent(getApplicationContext(), ViewSnapActivity.class);
+                intent.putExtra("imageName", String.valueOf(snapshot.child("imageName").getValue()));
+                intent.putExtra("imageURL", String.valueOf(snapshot.child("imageURL").getValue()));
+                intent.putExtra("message", String.valueOf(snapshot.child("message").getValue()));
+                intent.putExtra("snapKey", snapshot.getKey());
+                startActivity(intent);
+            }
         });
     }
 
