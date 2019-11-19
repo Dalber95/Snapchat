@@ -52,16 +52,29 @@ public class SnapsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
 
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap : snaps) {
+                    int index = 0;
+                    if (snap.getKey().equals(dataSnapshot.getKey())) {
+                        snaps.remove(index);
+                        emails.remove(index);
+                    }
+                    index++;
+                }
+                adapter.notifyDataSetChanged();
+            }
 
             @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
 
         snapsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
